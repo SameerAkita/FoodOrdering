@@ -1,11 +1,16 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image } from 'react-native';
 import { useState } from 'react';
+import { Stack } from 'expo-router'
 import Button from '@/src/components/Button';
+import { defaultPizzaImage } from '@/src/components/ProductListItem';
+import Colors from '@/src/constants/Colors';
+import * as ImagePicker from 'expo-image-picker'
 
 const CreateProductScreen = () => {
     const [name, setName] = useState('')
     const [price, setPrice] = useState('')
     const [errors, setErrors] = useState('')
+    const [image, setImage] = useState<string | null>(null)
     
     const resetFields = () => {
         setName('')
@@ -40,9 +45,31 @@ const CreateProductScreen = () => {
         resetFields()
     }
 
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ['images', 'videos'],
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+
+        console.log(result)
+
+        if(!result.canceled) {
+            setImage(result.assets[0].uri)
+        }
+    }    
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{title: "Create Product"}} />
+            <Image 
+                source={{uri: image || defaultPizzaImage}}
+                style={styles.image}
+            />
+            <Text onPress={pickImage} style={styles.textButton}>Select image</Text>
+
             <Text style={styles.label}>Name</Text>
             <TextInput 
                 value={name}
@@ -69,6 +96,17 @@ const styles = StyleSheet.create({
         flex: 1, 
         justifyContent: 'center',
         padding: 10,
+    },
+    image: {
+        width: '50%',
+        aspectRatio: 1,
+        alignSelf: 'center'
+    },
+    textButton: {
+        alignSelf: 'center',
+        fontWeight: 'bold',
+        color: Colors.light.tint,
+        marginVertical: 10,
     },
     label: {
         color: 'grey',
