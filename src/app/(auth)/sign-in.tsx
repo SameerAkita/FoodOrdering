@@ -1,6 +1,6 @@
 import Button from '@/src/components/Button'
 import Colors from '@/src/constants/Colors'
-import { Link, Stack } from 'expo-router'
+import { Link, Stack, router } from 'expo-router'
 import { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native'
 import { supabase } from '@/src/lib/supabase'
@@ -18,7 +18,7 @@ export default function signIn() {
                     password
                 }
             )
-    
+
             if (error) Alert.alert(error.message)
             setLoading(false)
         }
