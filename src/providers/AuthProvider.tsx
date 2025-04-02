@@ -26,16 +26,16 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         const fetchSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             setSession(session);
-            setLoading(false);
-
+            
             if (session) {
                 const { data } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
-                    .single()
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single()
                 setProfile(data || null)
             }
+            setLoading(false);
         }
         fetchSession();
 

@@ -15,8 +15,12 @@ const index = () => {
   if (!session) {
     return <Redirect href={'/sign-in'} />
   }
+  
+  if (!isAdmin) {
+    return <Redirect href={'/(user)'} />
+  }
 
-  console.log(isAdmin)
+
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
