@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native';
 import { useState } from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { router, Stack, useLocalSearchParams } from 'expo-router'
 import Button from '@/src/components/Button';
 import { defaultPizzaImage } from '@/src/components/ProductListItem';
 import Colors from '@/src/constants/Colors';
@@ -54,8 +54,15 @@ const CreateProductScreen = () => {
         if (!validateInput()) {
             return
         }
-        insertProduct({ name, price: parseFloat(price), image })
-        resetFields()
+        insertProduct(
+            { name, price: parseFloat(price), image },
+            {
+                onSuccess: () => {
+                    resetFields()
+                    router.back()
+                }
+            }
+        )
     }
 
     const onUpdateCreate = () => {
