@@ -5,7 +5,7 @@ import Button from '@/src/components/Button';
 import { defaultPizzaImage } from '@/src/components/ProductListItem';
 import Colors from '@/src/constants/Colors';
 import * as ImagePicker from 'expo-image-picker'
-import { useInsertProduct, useProduct, useUpdateProduct } from '@/src/api/products';
+import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from '@/src/api/products';
 
 const CreateProductScreen = () => {
     const [name, setName] = useState('')
@@ -20,6 +20,7 @@ const CreateProductScreen = () => {
 
     const { mutate: insertProduct } = useInsertProduct()
     const { mutate: updateProduct } = useUpdateProduct()
+    const { mutate: deleteProduct } = useDeleteProduct()
     const { data: updatingProduct } = useProduct(id)
 
     useEffect(() => {
@@ -109,7 +110,13 @@ const CreateProductScreen = () => {
     }    
 
     const onDelete = () => {
-        console.log('delete')
+        deleteProduct(id, {
+            onSuccess: () => {
+                resetFields()
+                router.replace('/(admin)')
+            }
+        })
+
     }
 
     const confirmDelete = () => {
