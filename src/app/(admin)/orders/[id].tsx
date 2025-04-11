@@ -17,9 +17,11 @@ export default function OrderDetails() {
         return <ActivityIndicator />
     }
 
-    if (error) {
+    if (error || !order ) {
         return <Text>failed to fetch</Text>
     }
+
+    console.log(order)
  
     return (
         <View style={styles.container}>
