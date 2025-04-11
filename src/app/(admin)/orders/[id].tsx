@@ -5,13 +5,14 @@ import { Stack, useLocalSearchParams } from 'expo-router'
 import { FlatList, StyleSheet, Text, View, Pressable, ActionSheetIOS, ActivityIndicator} from 'react-native'
 import { OrderStatusList } from '@/src/types'
 import Colors from '@/src/constants/Colors'
-import { useOrderDetails } from '@/src/api/orders'
+import { useOrderDetails, useUpdateOrder } from '@/src/api/orders'
 
 export default function OrderDetails() {
     const { id: idString } = useLocalSearchParams()
     const id = parseFloat(typeof idString === 'string' ? idString : idString[0])
 
     const { data: order, error, isLoading } = useOrderDetails(id)
+    const { mutate: updateOrder} = useUpdateOrder()
 
     if (isLoading) {
         return <ActivityIndicator />
@@ -21,7 +22,9 @@ export default function OrderDetails() {
         return <Text>failed to fetch</Text>
     }
 
-    console.log(order)
+    const updateStatus = (status: string) => {
+        updateOrder({ id: id, updatedFields: { status } })
+    }
  
     return (
         <View style={styles.container}>
@@ -40,7 +43,7 @@ export default function OrderDetails() {
                             {OrderStatusList.map((status) => (
                             <Pressable
                                 key={status}
-                                onPress={() => console.warn('Update status')}
+                                onPress={() => {updateStatus(status)}}
                                 style={{
                                 borderColor: Colors.light.tint,
                                 borderWidth: 1,
